@@ -1,0 +1,83 @@
+Into the Core, page 63
+
+11.2. Unpacking
+First, we’ll extract the kernel and initrd image from the latest Core
+ISO.
+$ sudo mkdir /mnt/tmp
+$ sudo mount TinyCore-current.iso /mnt/tmp -o loop,ro
+$ cd /mnt/tmp
+$ cp boot/vmlinuz boot/tinycore.gz /tmp
+$ sudo umount /mnt/tmp
+If you are going to create an ISO image, instead of copying only
+these two files, copy everything:
+Packing
+64
+$ sudo mkdir /mnt/tmp
+$ sudo mount TinyCore-current.iso /mnt/tmp -o loop,ro
+$ cp -a /mnt/tmp/boot /tmp
+$ mv /tmp/boot/tinycore.gz /tmp
+$ sudo umount /mnt/tmp
+With the files copied into /tmp, we’ll be unpacking the initrd image
+next.
+$ sudo mkdir /tmp/extract
+$ cd /tmp/extract
+$ zcat /tmp/tinycore.gz | sudo cpio -i -H newc -d
+Please note the use of sudo where needed; root rights are required
+to preserve permissions correctly. If your host distribution sets non-
+default flags for /tmp, you may also need to change the permissions
+of the /tmp/extract directory - it needs to be root:root 755 in order
+to produce a bootable image.
+
+
+
+
+
+11.3. Packing
+With the modifications done, these steps create the initrd image
+from the extracted directory tree:
+$ cd /tmp/extract
+$ sudo find | sudo cpio -o -H newc | \
+gzip -2 > ../tinycore.gz
+$ cd /tmp
+$ advdef -z4 tinycore.gz
+The image is compressed using gzip’s level 2 to save time.
+Advdef is used to re-compress the image with a slightly better
+implementation, producing a smaller image that is faster to boot
+
+
+
+
+
+11.4. Creating an ISO image
+The following commands create a bootable ISO image, ready to be
+burned or booted in a virtual machine:
+$ cd /tmp
+$ mv tinycore.gz boot
+$ mkdir newiso
+$ mv boot newiso
+$ mkisofs -l -J -r -V TC-custom -no-emul-boot \
+-boot-load-size 4 \
+-boot-info-table -b boot/isolinux/isolinux.bin \
+-c boot/isolinux/boot.cat -o TC-remastered.iso newiso
+# Optionally clean-up the temp dir
+$ rm -rf newiso
+________________________________________________________________________________________________
+
+for making splash image:
+
+$ sudo apt install syslinux-utils
+$ ppmtolss16 < /tmp/splash.ppm > frosya.rle
+
+________________________________________________________________________________________________
+
+
+
+
+
+
+
+
+
+
+
+
