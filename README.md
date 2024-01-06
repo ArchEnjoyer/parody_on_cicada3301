@@ -18,4 +18,4 @@ In the file frosya.txt you need to type "^Xfrosya.rle". ^X is a special characte
 
 Make iso file (I'll place commands you need in the file commands.txt).
 
-In cicada3301 tinycore start programs runs after init and bin file /sbin/init completed. It means that you can abort programs with CTRL+C and after this you will be taken to a shell. In my instruction /sbin/init not runs, so the the rest of the boot process and configuring the environment for the user not executing and, another words, you cannot fall to shell with CTRL+C.
+In cicada3301 tinycore start programs runs after init and bin file /sbin/init completed. It means that you can abort programs with CTRL+C and after this you will be taken to a shell. In my instruction /sbin/init not runs, so the rest of the boot process and configuring the environment for the user not executing and, another words, you cannot fall to shell with CTRL+C.
